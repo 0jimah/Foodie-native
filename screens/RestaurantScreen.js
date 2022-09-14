@@ -6,9 +6,13 @@ import * as Icons from 'react-native-heroicons/outline';
 import * as IconSolid from 'react-native-heroicons/solid';
 import DishRow from '../components/DishRow';
 import BasketIcon from '../components/BasketIcon';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setRestaurant } from '../features/restaurantSlice';
 
 const RestaurantScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const {
     params: {
@@ -24,11 +28,28 @@ const RestaurantScreen = () => {
       lat,
     },
   } = useRoute();
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   }, []);
+  useEffect(() => {
+    dispatch(
+      setRestaurant({
+        id,
+        imgUrl,
+        title,
+        rating,
+        genre,
+        address,
+        short_description,
+        dishes,
+        long,
+        lat,
+      })
+    );
+  }, [dispatch]);
 
   return (
     <>
@@ -79,7 +100,7 @@ const RestaurantScreen = () => {
             <Icons.ChevronRightIcon color="#00ccbb" />
           </TouchableOpacity>
         </View>
-        <View>
+        <View className="pb-36">
           <Text className="px-4 pt-6 mb-3 font-bold text-xl">Menu</Text>
           {dishes.map((dish) => (
             <DishRow
